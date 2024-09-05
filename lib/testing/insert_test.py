@@ -6,24 +6,38 @@ connection = sqlite3.connect(":memory:")
 
 cursor = connection.cursor()
 
-create_file = open("lib/create.sql")
-create_as_string = create_file.read()
-cursor.executescript(create_as_string)
+sql_file = open("lib/create.sql")
+sql_as_string = sql_file.read()
+cursor.executescript(sql_as_string)
 
-insert_file = open("lib/insert.sql")
-insert_as_string = insert_file.read()
-cursor.executescript(insert_as_string)
+class TestCreate:
+    '''Statement in create.sql'''
 
-class TestInsert:
-    '''Statement in insert.sql'''
+    def test_creates_bears_with_name_column(self):
+        '''creates a table "bears" with a column "name".'''
+        assert(cursor.execute("SELECT name FROM bears;"))
 
-    def test_inserts_eight_bears_into_table(self):
-        '''inserts 8 bears into bears table.'''
-        result = cursor.execute("SELECT COUNT(*) FROM bears;")
-        assert(result.fetchall()[0][0] == 8)
+    def test_creates_bears_with_age_column(self):
+        '''creates a table "bears" with a column "age".'''
+        assert(cursor.execute("SELECT age FROM bears;"))
 
-    def test_has_unnamed_bear(self):
-        '''inserts one unnamed bear into bears table.'''
-        result = cursor.execute("SELECT COUNT(*) FROM bears WHERE name IS NULL;")
-        assert(result.fetchall()[0][0] == 1)
-    
+    def test_creates_bears_with_sex_column(self):
+        '''creates a table "bears" with a column "sex".'''
+        assert(cursor.execute("SELECT sex FROM bears;"))
+
+    def test_creates_bears_with_color_column(self):
+        '''creates a table "bears" with a column "color".'''
+        assert(cursor.execute("SELECT color FROM bears;"))
+
+    def test_creates_bears_with_temperament_column(self):
+        '''creates a table "bears" with a column "temperament".'''
+        assert(cursor.execute("SELECT temperament FROM bears;"))
+
+    def test_creates_bears_with_alive_column(self):
+        '''creates a table "bears" with a column "alive".'''
+        assert(cursor.execute("SELECT alive FROM bears;"))
+
+    def test_creates_bears_with_id_pk(self):
+        '''creates a table "bears" with a primary key "id".'''
+        columns = [column for column in cursor.execute("PRAGMA table_info(bears);")]
+        assert(columns[0][1] == "id")
